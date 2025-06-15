@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>PDF Generator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    #output { padding: 20px; }
+  </style>
+</head>
+<body>
+
+  <div id="output"></div>
+
+  <script>
+    // 1. Pobierz parametr `html` z URL
+    function getHTMLFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return decodeURIComponent(params.get("html") || "");
+    }
+
+    // 2. Wstaw HTML do elementu i wygeneruj PDF
+    window.onload = () => {
+      const rawHTML = getHTMLFromURL();
+      if (!rawHTML) {
+        document.body.innerHTML = "<p>Brak kodu HTML w URL.</p>";
+        return;
+      }
+
+      const container = document.getElementById("output");
+      container.innerHTML = rawHTML;
+
+      // 3. Odczekaj chwilę i generuj PDF
+      setTimeout(() => {
+        html2pdf().from(container).save("dokument.pdf");
+      }, 500); // czas na wyrenderowanie
+    };
+  </script>
+
+</body>
+</html>
